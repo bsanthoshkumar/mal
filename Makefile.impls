@@ -39,7 +39,7 @@ IMPLS = ada ada.2 awk bash basic bbc-basic c c.2 chuck clojure coffee common-lis
 	guile haskell haxe hy io janet java java-truffle js jq julia kotlin livescript logo lua make mal \
 	matlab miniMAL nasm nim objc objpascal ocaml perl perl6 php picolisp pike plpgsql \
 	plsql powershell prolog ps python python.2 r racket rexx rpython ruby rust scala scheme skew sml \
-	swift swift3 swift4 swift5 tcl ts vala vb vhdl vimscript wasm wren yorick xslt zig
+	swift swift3 swift4 swift5 tcl ts vala vb vhdl vimscript wasm wren yorick xslt zig sk
 
 step5_EXCLUDES += bash        # never completes at 10,000
 step5_EXCLUDES += basic       # too slow, and limited to ints of 2^16
@@ -104,6 +104,7 @@ scheme_STEP_TO_PROG_cyclone     = impls/scheme/$($(1))
 scheme_STEP_TO_PROG_foment      = impls/scheme/$($(1)).scm
 
 # Map of step (e.g. "step8") to executable file for that step
+sk_STEP_TO_PROG = impls/sk/$($(1)).js
 ada_STEP_TO_PROG =           impls/ada/$($(1))
 ada.2_STEP_TO_PROG =         impls/ada.2/$($(1))
 awk_STEP_TO_PROG =           impls/awk/$($(1)).awk
