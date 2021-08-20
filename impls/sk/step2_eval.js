@@ -1,6 +1,6 @@
 const readline = require("readline");
 const { read_str } = require("./reader");
-const { pr_str, MalSymbol, List, Vector } = require("./types");
+const { pr_str, MalSymbol, List, Vector, Hashmap } = require("./types");
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -32,6 +32,14 @@ const eval_ast = (ast, env) => {
 
   if (ast instanceof Vector) {
     return new Vector(ast.ast.map((x) => EVAL(x, env)));
+  }
+
+  if (ast instanceof Hashmap) {
+    const newAst = [];
+    for (const [key, value] of ast.hashmap.entries()) {
+      newAst.push(EVAL(key, env), EVAL(value, env));
+    }
+    return new Hashmap(newAst);
   }
 
   return ast;
