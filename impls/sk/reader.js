@@ -1,4 +1,12 @@
-const { List, Vector, Nil, Str, Keyword, MalSymbol, Hashmap } = require("./types");
+const {
+  List,
+  Vector,
+  Nil,
+  Str,
+  Keyword,
+  MalSymbol,
+  Hashmap,
+} = require("./types");
 
 class Reader {
   constructor(tokens) {
@@ -49,6 +57,9 @@ const read_atom = (reader) => {
       return c === "n" ? "\n" : c;
     });
     return new Str(str);
+  }
+  if (token.startsWith('"')) {
+    throw "unbalanced";
   }
 
   return new MalSymbol(token);
