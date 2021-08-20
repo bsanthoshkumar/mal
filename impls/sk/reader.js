@@ -1,4 +1,4 @@
-const { List, Vector, Nil, Str, Keyword, MalSymbol } = require("./types");
+const { List, Vector, Nil, Str, Keyword, MalSymbol, Hashmap } = require("./types");
 
 class Reader {
   constructor(tokens) {
@@ -79,6 +79,14 @@ const read_vector = (reader) => {
   return new Vector(ast);
 };
 
+const read_hashmap = (reader) => {
+  const ast = read_seq(reader, "}");
+  if (ast.length % 2 !== 0) {
+    throw "Odd number of hashmap arguments";
+  }
+  return new Hashmap(ast);
+};
+
 const read_form = (reader) => {
   const token = reader.peek();
 
@@ -91,6 +99,8 @@ const read_form = (reader) => {
       throw "unbalanced";
     case "]`":
       throw "unbalanced";
+    case "{":
+      return read_hashmap(reader);
   }
 
   return read_atom(reader);

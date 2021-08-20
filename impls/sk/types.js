@@ -34,6 +34,31 @@ class Vector extends MalValue {
   }
 }
 
+class Hashmap extends MalValue {
+  constructor(ast) {
+    super();
+    this.ast = ast;
+    this.hashmap = new Map();
+    this.initializeHashmap();
+  }
+
+  initializeHashmap() {
+    for (let i = 0; i < this.ast.length; i += 2) {
+      this.hashmap.set(this.ast[i], this.ast[i + 1]);
+    }
+  }
+
+  pr_str(print_readably = false) {
+    let str = [];
+    for (const [key, value] of this.hashmap.entries()) {
+      str.push(
+        pr_str(key, print_readably) + " " + pr_str(value, print_readably)
+      );
+    }
+    return `{${str.join(", ")}}`;
+  }
+}
+
 class NilVal extends MalValue {
   constructor() {
     super();
@@ -86,4 +111,14 @@ class MalSymbol extends MalValue {
 }
 
 const Nil = new NilVal();
-module.exports = { MalValue, List, Vector, pr_str, Nil, Str, Keyword, MalSymbol };
+module.exports = {
+  MalValue,
+  List,
+  Vector,
+  pr_str,
+  Hashmap,
+  Nil,
+  Str,
+  Keyword,
+  MalSymbol,
+};
