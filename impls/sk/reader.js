@@ -1,4 +1,4 @@
-const { List, Vector, Nil, Str } = require("./types");
+const { List, Vector, Nil, Str, Keyword, MalSymbol } = require("./types");
 
 class Reader {
   constructor(tokens) {
@@ -41,12 +41,17 @@ const read_atom = (reader) => {
   if (token === "nil") {
     return Nil;
   }
-
+  if (token.startsWith(":")) {
+    return new Keyword(token.slice(1));
+  }
   if (token.match(/^"(?:\\.|[^\\"])*"$/)) {
-    return new Str(token.slice(1, -1));
+    const str = token.slice(1, -1).replace(/\\(.)/g, function (_, c) {
+      return c === "n" ? "\n" : c;
+    });
+    return new Str(str);
   }
 
-  return token;
+  return new MalSymbol(token);
 };
 
 const read_seq = (reader, closeSymbol) => {
