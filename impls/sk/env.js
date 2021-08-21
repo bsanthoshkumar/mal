@@ -39,4 +39,4 @@ class Env {
   }
 }
 
-module.exports = { Env };
+module.exports = Env;
