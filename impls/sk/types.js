@@ -40,6 +40,10 @@ class Vector extends MalValue {
   isEmpty() {
     return this.ast.length === 0;
   }
+
+  length() {
+    return this.ast.length;
+  }
 }
 
 class Hashmap extends MalValue {
