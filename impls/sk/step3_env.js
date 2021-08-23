@@ -1,5 +1,5 @@
 const readline = require("readline");
-const { Env } = require("./env");
+const Env = require("./env");
 const { read_str } = require("./reader");
 const { pr_str, MalSymbol, List, Vector, Hashmap } = require("./types");
 

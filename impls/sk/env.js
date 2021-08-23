@@ -1,4 +1,4 @@
-const { MalSymbol } = require("./types");
+const { MalSymbol, List } = require("./types");
 
 class Env {
   constructor(outer = null) {
@@ -32,9 +32,14 @@ class Env {
 
   static createEnv(outer = null, binds = [], exprs = []) {
     const env = new Env(outer);
-    binds.forEach((symbol, index) => {
-      env.set(symbol, exprs[index]);
-    });
+    for (let i = 0; i < binds.length; i++) {
+      if (binds[i] instanceof MalSymbol && binds[i].symbol === "&") {
+        env.set(binds[i + 1], new List(exprs.slice(i)));
+        break;
+      }
+      env.set(binds[i], exprs[i]);
+    }
+
     return env;
   }
 }

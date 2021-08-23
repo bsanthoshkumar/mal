@@ -36,6 +36,7 @@ const eval_ast = (ast, env) => {
 };
 const READ = (str) => read_str(str);
 const EVAL = (ast, env) => {
+  if (ast === undefined) return Nil;
   if (!(ast instanceof List)) {
     return eval_ast(ast, env);
   }
