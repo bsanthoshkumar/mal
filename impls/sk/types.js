@@ -182,6 +182,19 @@ class MalSymbol extends MalValue {
   }
 }
 
+class MalFunction extends MalValue {
+  constructor(ast, binds, env) {
+    super();
+    this.ast = ast;
+    this.binds = binds;
+    this.env = env;
+  }
+
+  print_str(print_readably = false) {
+    return "#<function>";
+  }
+}
+
 const Nil = new NilVal();
 module.exports = {
   pr_str,
@@ -194,4 +207,5 @@ module.exports = {
   Str,
   Keyword,
   MalSymbol,
+  MalFunction,
 };
