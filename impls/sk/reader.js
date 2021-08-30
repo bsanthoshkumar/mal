@@ -28,7 +28,10 @@ class Reader {
 const tokenize = (str) => {
   const regex =
     /[\s,]*(~@|[\[\]{}()'`~^@]|"(?:\\.|[^\\"])*"?|;.*|[^\s\[\]{}('"`,;)]*)/g;
-  return [...str.matchAll(regex)].slice(0, -1).map((x) => x[1]);
+  return [...str.matchAll(regex)]
+    .slice(0, -1)
+    .map((x) => x[1])
+    .filter((x) => x[0] !== ";");
 };
 
 const read_atom = (reader) => {
@@ -98,6 +101,10 @@ const read_hashmap = (reader) => {
   return new Hashmap(ast);
 };
 
+const read_macro = (reader) => {
+  reader.next();
+  return new List(new MalSymbol("dref"), read_form(reader));
+};
 const read_form = (reader) => {
   const token = reader.peek();
 
@@ -112,6 +119,8 @@ const read_form = (reader) => {
       throw "unbalanced";
     case "{":
       return read_hashmap(reader);
+    case "@":
+      return read_macro(reader);
   }
 
   return read_atom(reader);

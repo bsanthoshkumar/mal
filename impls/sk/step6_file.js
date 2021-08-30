@@ -19,6 +19,10 @@ const rl = readline.createInterface({
 
 const env = new Env(core);
 env.set(new MalSymbol("eval"), (ast) => EVAL(ast, env));
+env.set(
+  new MalSymbol("*ARGV*"),
+  new List(process.argv.slice(3).map((s) => new Str(s)))
+);
 
 const eval_ast = (ast, env) => {
   if (ast instanceof MalSymbol) {
@@ -81,12 +85,14 @@ const EVAL = (ast, env) => {
 
     if (firstElement === "do") {
       ast.ast.slice(1, -1).reduce((_, form) => EVAL(form, env), Nil);
-      ast = ast.ast.length[ast.ast.length - 1];
+      ast = ast.ast[ast.ast.length - 1];
       continue;
     }
 
     if (firstElement === "fn*") {
-      return new MalFunction(ast.ast[2], ast.ast[1].ast, env);
+      return new MalFunction(ast.ast[2], ast.ast[1].ast, env, (...exprs) =>
+        EVAL(ast.ast[2], Env.createEnv(env, ast.ast[1].ast, exprs))
+      );
     }
 
     const [fn, ...args] = eval_ast(ast, env).ast;
@@ -120,4 +126,9 @@ const main = () => {
   });
 };
 
-main();
+const executeMalFile = () => {
+  rep(`(load-file "${process.argv[2]}")`);
+  process.exit(0);
+};
+
+process.argv.length > 2 ? executeMalFile() : main();

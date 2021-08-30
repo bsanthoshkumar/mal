@@ -183,15 +183,41 @@ class MalSymbol extends MalValue {
 }
 
 class MalFunction extends MalValue {
-  constructor(ast, binds, env) {
+  constructor(ast = null, binds = [], env = null, fn = null) {
     super();
     this.ast = ast;
     this.binds = binds;
     this.env = env;
+    this.fn = fn;
   }
 
-  print_str(print_readably = false) {
+  pr_str(print_readably = false) {
     return "#<function>";
+  }
+
+  apply(thisArg = null, params = []) {
+    return this.fn.apply(thisArg, params);
+  }
+}
+
+class Atom extends MalValue {
+  constructor(malValue) {
+    super();
+    this.malValue = malValue;
+  }
+
+  pr_str(print_readably = false) {
+    return `(atom ${pr_str(this.malValue, print_readably)})`;
+  }
+
+  isEqual(other) {
+    if (!(other instanceof Atom)) return false;
+    return isEqual(this.malValue, other.malValue);
+  }
+
+  reset(malValue) {
+    this.malValue = malValue;
+    return this.malValue;
   }
 }
 
@@ -208,4 +234,5 @@ module.exports = {
   Keyword,
   MalSymbol,
   MalFunction,
+  Atom,
 };

@@ -1,7 +1,16 @@
 const { readFileSync } = require("fs");
 const Env = require("./env");
 const { read_str } = require("./reader");
-const { MalSymbol, pr_str, Nil, List, Str, isEqual } = require("./types");
+const {
+  MalSymbol,
+  pr_str,
+  Nil,
+  List,
+  Str,
+  isEqual,
+  Atom,
+  MalValue,
+} = require("./types");
 
 const env = new Env(null);
 env.set(new MalSymbol("+"), (...args) => args.reduce((a, b) => a + b, 0));
@@ -41,6 +50,7 @@ env.set(
   new MalSymbol("str"),
   (...values) => new Str(values.map((x) => pr_str(x, false)).join(""))
 );
+
 env.set(new MalSymbol("println"), (...values) => {
   const str = values.map((x) => pr_str(x, false)).join(" ");
   console.log(str);
@@ -55,9 +65,31 @@ env.set(new MalSymbol("read-string"), (ast) => {
 env.set(new MalSymbol("slurp"), (ast) => {
   const filePath = pr_str(ast);
   try {
-    return readFileSync(filePath, "utf-8");
+    return new Str(readFileSync(filePath, "utf-8"));
   } catch (e) {
     throw `File ${filePath} ${e} not found`;
   }
 });
+
+env.set(new MalSymbol("atom"), (value) => new Atom(value));
+env.set(new MalSymbol("atom?"), (value) => value instanceof Atom);
+env.set(new MalSymbol("deref"), (atom) => {
+  if (atom instanceof Atom) return atom.malValue;
+  throw `${pr_str(atom)} is not an Atom`;
+});
+env.set(new MalSymbol("reset!"), (atom, malValue) => {
+  if (atom instanceof Atom) {
+    return atom.reset(malValue);
+  }
+  throw `${pr_str(atom)} is not an Atom`;
+});
+env.set(new MalSymbol("swap!"), (atom, fn, ...args) => {
+  if (atom instanceof Atom) {
+    const malValue = fn.apply(null, [atom.malValue, ...args]);
+    console.log(malValue);
+    return atom.reset(malValue);
+  }
+  throw `${pr_str(atom)} is not an Atom`;
+});
+
 module.exports = env;
