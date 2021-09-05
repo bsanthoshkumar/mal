@@ -107,11 +107,23 @@ const prependSymbol = (reader, symbolStr) => {
 };
 
 const read_deref = (reader) => {
-  return prependSymbol(reader, "deref")
+  return prependSymbol(reader, "deref");
 };
 
 const read_quote = (reader) => {
-  return prependSymbol(reader, "quote")
+  return prependSymbol(reader, "quote");
+};
+
+const read_unquote = (reader) => {
+  return prependSymbol(reader, "unquote");
+};
+
+const read_splice_unquote = (reader) => {
+  return prependSymbol(reader, "splice-unquote");
+};
+
+const read_quasiquote = (reader) => {
+  return prependSymbol(reader, "quasiquote");
 };
 
 const read_form = (reader) => {
@@ -132,6 +144,12 @@ const read_form = (reader) => {
       return read_deref(reader);
     case "'":
       return read_quote(reader);
+    case "~":
+      return read_unquote(reader);
+    case "~@":
+      return read_splice_unquote(reader);
+    case "`":
+      return read_quasiquote(reader);
   }
 
   return read_atom(reader);

@@ -48,6 +48,10 @@ class List extends MalValue {
     return new List(this.ast.concat(other.ast));
   }
 
+  beginsWith(symbol) {
+    return !this.isEmpty() && this.ast[0].symbol === symbol;
+  }
+
   isEqual(x) {
     if (
       (!(x instanceof List) && !(x instanceof Vector)) ||
@@ -78,11 +82,11 @@ class Vector extends MalValue {
   }
 
   cons(element) {
-    return new Vector([element, ...this.ast]);
+    return new List([element, ...this.ast]);
   }
 
   concat(other) {
-    return new Vector(this.ast.concat(other.ast));
+    return new List(this.ast.concat(other.ast));
   }
 
   isEqual(x) {

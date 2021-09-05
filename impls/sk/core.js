@@ -10,6 +10,7 @@ const {
   isEqual,
   Atom,
   MalValue,
+  Vector,
 } = require("./types");
 
 const env = new Env(null);
@@ -96,7 +97,11 @@ env.set(new MalSymbol("cons"), (element, collection) => {
   return collection.cons(element);
 });
 env.set(new MalSymbol("concat"), (...lists) => {
-  return lists.reduce((a, b) => a.concat(b));
+  const list = new List([]);
+  return lists.reduce((a, b) => a.concat(b), list);
+});
+env.set(new MalSymbol("vec"), (collection) => {
+  return new Vector([...collection.ast]);
 });
 
 module.exports = env;

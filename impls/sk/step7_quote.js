@@ -48,6 +48,41 @@ const eval_ast = (ast, env) => {
 
   return ast;
 };
+
+const quasiquote = (ast) => {
+  if (ast instanceof List && ast.beginsWith("unquote")) {
+    return ast.ast[1];
+  }
+  if (ast instanceof List) {
+    let result = new List([]);
+    for (let i = ast.ast.length - 1; i >= 0; i--) {
+      const elt = ast.ast[i];
+      if (elt instanceof List && elt.beginsWith("splice-unquote")) {
+        result = new List([new MalSymbol("concat"), elt.ast[1], result]);
+      } else {
+        result = new List([new MalSymbol("cons"), quasiquote(elt), result]);
+      }
+    }
+    return result;
+  }
+  if (ast instanceof Vector) {
+    let result = new List([]);
+    for (let i = ast.ast.length - 1; i >= 0; i--) {
+      const elt = ast.ast[i];
+      if (elt instanceof List && elt.beginsWith("splice-unquote")) {
+        result = new List([new MalSymbol("concat"), elt.ast[1], result]);
+      } else {
+        result = new List([new MalSymbol("cons"), quasiquote(elt), result]);
+      }
+    }
+    return new List([new MalSymbol("vec"), result]);
+  }
+  if (ast instanceof MalSymbol || ast instanceof Hashmap) {
+    return new List([new MalSymbol("quote"), ast]);
+  }
+  return ast;
+};
+
 const READ = (str) => read_str(str);
 const EVAL = (ast, env) => {
   while (true) {
@@ -98,6 +133,15 @@ const EVAL = (ast, env) => {
 
     if (firstElement === "quote") {
       return ast.ast[1];
+    }
+
+    if (firstElement === "quasiquoteexpand") {
+      return quasiquote(ast.ast[1]);
+    }
+
+    if (firstElement === "quasiquote") {
+      ast = quasiquote(ast.ast[1]);
+      continue;
     }
 
     const [fn, ...args] = eval_ast(ast, env).ast;
