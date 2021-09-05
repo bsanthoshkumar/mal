@@ -92,4 +92,11 @@ env.set(new MalSymbol("swap!"), (atom, fn, ...args) => {
   throw `${pr_str(atom)} is not an Atom`;
 });
 
+env.set(new MalSymbol("cons"), (element, collection) => {
+  return collection.cons(element);
+});
+env.set(new MalSymbol("concat"), (...lists) => {
+  return lists.reduce((a, b) => a.concat(b));
+});
+
 module.exports = env;

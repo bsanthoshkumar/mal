@@ -40,6 +40,14 @@ class List extends MalValue {
     return this.ast.length;
   }
 
+  cons(element) {
+    return new List([element, ...this.ast]);
+  }
+
+  concat(other) {
+    return new List(this.ast.concat(other.ast));
+  }
+
   isEqual(x) {
     if (
       (!(x instanceof List) && !(x instanceof Vector)) ||
@@ -67,6 +75,14 @@ class Vector extends MalValue {
 
   count() {
     return this.ast.length;
+  }
+
+  cons(element) {
+    return new Vector([element, ...this.ast]);
+  }
+
+  concat(other) {
+    return new Vector(this.ast.concat(other.ast));
   }
 
   isEqual(x) {

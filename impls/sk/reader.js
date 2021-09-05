@@ -101,10 +101,19 @@ const read_hashmap = (reader) => {
   return new Hashmap(ast);
 };
 
-const read_macro = (reader) => {
+const prependSymbol = (reader, symbolStr) => {
   reader.next();
-  return new List([new MalSymbol("deref"), read_form(reader)]);
+  return new List([new MalSymbol(symbolStr), read_form(reader)]);
 };
+
+const read_deref = (reader) => {
+  return prependSymbol(reader, "deref")
+};
+
+const read_quote = (reader) => {
+  return prependSymbol(reader, "quote")
+};
+
 const read_form = (reader) => {
   const token = reader.peek();
 
@@ -120,7 +129,9 @@ const read_form = (reader) => {
     case "{":
       return read_hashmap(reader);
     case "@":
-      return read_macro(reader);
+      return read_deref(reader);
+    case "'":
+      return read_quote(reader);
   }
 
   return read_atom(reader);
