@@ -103,7 +103,7 @@ const read_hashmap = (reader) => {
 
 const read_macro = (reader) => {
   reader.next();
-  return new List(new MalSymbol("dref"), read_form(reader));
+  return new List([new MalSymbol("deref"), read_form(reader)]);
 };
 const read_form = (reader) => {
   const token = reader.peek();

@@ -10,6 +10,7 @@ const {
   Hashmap,
   Nil,
   MalFunction,
+  Str,
 } = require("./types");
 
 const rl = readline.createInterface({
@@ -98,7 +99,7 @@ const EVAL = (ast, env) => {
     const [fn, ...args] = eval_ast(ast, env).ast;
     if (fn instanceof MalFunction) {
       ast = fn.ast;
-      env = Env.createEnv(env, fn.binds, args);
+      env = Env.createEnv(fn.env, fn.binds, args);
       continue;
     }
 
