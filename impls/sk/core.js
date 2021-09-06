@@ -104,4 +104,20 @@ env.set(new MalSymbol("vec"), (collection) => {
   return new Vector([...collection.ast]);
 });
 
+env.set(new MalSymbol("nth"), (collection, index) => {
+  return collection.nth(index);
+});
+env.set(new MalSymbol("first"), (collection, index) => {
+  if (collection === Nil) {
+    return Nil;
+  }
+  return collection.first(index);
+});
+env.set(new MalSymbol("rest"), (collection, index) => {
+  if (collection === Nil) {
+    return new List([]);
+  }
+  return collection.rest(index);
+});
+
 module.exports = env;

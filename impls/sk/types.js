@@ -52,6 +52,24 @@ class List extends MalValue {
     return !this.isEmpty() && this.ast[0].symbol === symbol;
   }
 
+  nth(index) {
+    if (this.ast.length - 1 >= index) {
+      return this.ast[index];
+    }
+    throw `index out of range`;
+  }
+
+  first() {
+    return this.ast.length - 1 >= 0 ? this.ast[0] : new NilVal();
+  }
+
+  rest() {
+    if (this.ast.length !== 0) {
+      return new List([...this.ast.slice(1)]);
+    }
+    return new List([]);
+  }
+
   isEqual(x) {
     if (
       (!(x instanceof List) && !(x instanceof Vector)) ||
@@ -87,6 +105,24 @@ class Vector extends MalValue {
 
   concat(other) {
     return new List(this.ast.concat(other.ast));
+  }
+
+  nth(index) {
+    if (this.ast.length - 1 >= index) {
+      return this.ast[index];
+    }
+    throw `index out of range`;
+  }
+
+  first() {
+    return this.ast.length - 1 >= 0 ? this.ast[0] : new NilVal();
+  }
+
+  rest() {
+    if (this.ast.length !== 0) {
+      return new List([...this.ast.slice(1)]);
+    }
+    return new List([]);
   }
 
   isEqual(x) {
