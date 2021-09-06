@@ -203,12 +203,13 @@ class MalSymbol extends MalValue {
 }
 
 class MalFunction extends MalValue {
-  constructor(ast = null, binds = [], env = null, fn = null) {
+  constructor(ast = null, binds = [], env = null, fn = null, isMacro = false) {
     super();
     this.ast = ast;
     this.binds = binds;
     this.env = env;
     this.fn = fn;
+    this.isMacro = isMacro;
   }
 
   pr_str(print_readably = false) {
