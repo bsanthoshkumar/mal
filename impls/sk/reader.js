@@ -129,7 +129,7 @@ const read_quasiquote = (reader) => {
 const read_form = (reader) => {
   const token = reader.peek();
 
-  switch (token[0]) {
+  switch (token) {
     case "(":
       return read_list(reader);
     case "[":
